@@ -38,19 +38,17 @@ int main(int argc, char** argv)
 
 
 		//CONDICIONES INICIALES :
-		int cantidadDeMaquinasModelo1 = 10;
-		int cantidadDeMaquinasModelo2 = 2;
+		int cantidadDeMaquinasModelo1 = 5;
 
 		int tiempo = 0;
-		int tiempoFinal =  10; // 40320; // 1 Mes
+		int tiempoFinal =  10000; // 40320; // 1 Mes
 		int tiempoProximaLlegada = 0;
 		int tiempoLimiteDeRechazo; // 6 horas
-		int condicionTiempoRechazo = 360;
+		int condicionTiempoRechazo = 16;  //alto
 		int intervaloEntreArribos = 0;
 		int menorTiempoComprometidoModelo1 = 0;
-	//	int menorTiempoComprometidoModelo2 = 0;
 		//int menorTiempoComprometido=0;
-	//	int tiempoPromedioModelo2 = 65;
+
 
 		std::vector<int> tiempoComprometidoPorMaquinaModelo1(10);
 		std::vector<int> tiempoComprometidoPorMaquinaModelo2(10);
@@ -58,15 +56,18 @@ int main(int argc, char** argv)
 		//----------------------TEST ZONE-------------------------------------------------------------------------------------------------------------------------------
 		/*printf("hola\n");
 		printf("tiempo de atencion: %d  \n", tiempoDeAtencion() );
-
 		for (int i = 0 ; i < cantidadDeMaquinasModelo1 ; i++)
 		{
 		    printf("random: %f  \n", randomENTRE(10, 13 )  );
 			tiempoComprometidoPorMaquinaModelo1[i] = 0;
 		//	printf("numero: %d \n", tiempoComprometidoPorMaquinaModelo1[i] );
 		}*/
-		//---------------------HASTA ACA BORRAR-----------------------------------------------------------------------------------------------------------------------
 
+     //   for (int i = 0 ; i < 10 ; i++)
+	//	{
+	//		printf("d --->  %d ", (int)randomENTRE(1,8) );
+	//	}
+		//---------------------HASTA ACA BORRAR-----------------------------------------------------------------------------------------------------------------------
 
 
 		for (int i = 0 ; i < cantidadDeMaquinasModelo1 ; i++)
@@ -92,16 +93,12 @@ int main(int argc, char** argv)
 			sumatoriaTiempoOciosoPorMaquinaModelo1[i] = 0;
 		}
 
-	/*	for (int i = 0 ; i < cantidadDeMaquinasModelo2 ; i++)
-		{
-			sumatoriaTiempoOciosoPorMaquinaModelo2[i] = 0;
-		}
-*/
+
 
 		//EMPIEZA LA SIMULACION
         int minimoTC1;
 
-         int minimoTC2;
+        int minimoTC2;
 
 		while (tiempo < tiempoFinal)
 		{
@@ -113,29 +110,17 @@ int main(int argc, char** argv)
             tiempoProximaLlegada = tiempo + intervaloEntreArribos;
 
 
-
-
-
              minimoTC1 = obtenerMinimoTC1(cantidadDeMaquinasModelo1,tiempoComprometidoPorMaquinaModelo1);  //debuelve un entero
 
 
-            if(cantidadDeMaquinasModelo2>1) //SI Hay AL MENOS UNA MAQUINA NUEVA de model MR-8
-             {
-                 minimoTC2 = obtenerMinimoTC2(cantidadDeMaquinasModelo2,tiempoComprometidoPorMaquinaModelo2);
-            }
-
-
-
 			menorTiempoComprometidoModelo1 = tiempoComprometidoPorMaquinaModelo1[minimoTC1];
-
 
 				pedidosTotales = pedidosTotales + 1;
 
 				if (tiempo >= menorTiempoComprometidoModelo1)
 				{
 					tiempoComprometidoPorMaquinaModelo1[minimoTC1] =  tiempoComprometidoPorMaquinaModelo1[minimoTC1] + tiempoDeAtencion();
-
-
+                  //  printf("dd---- %d \n", tiempoComprometidoPorMaquinaModelo1[minimoTC1] );
 					//tiempoocioso = tiempoociosso + 1;
 
 				}
@@ -211,7 +196,11 @@ int validarHoraLaboral(int tiempo)
 
 }
 
-
+int intervaloDeArribo1()
+{
+	return (int)randomENTRE(2,6);
+}
+/*-------------------FUNCION TEMPORALMENTE  MODIFICADA--------------------
 int intervaloDeArribo1()
 {
 	while (true)
@@ -226,7 +215,7 @@ int intervaloDeArribo1()
 			return static_cast<int>(x1);
 		}
 	}
-}
+}*/
 
 double random(void)
 {
@@ -236,10 +225,9 @@ double random(void)
 double randomENTRE(int a, int b){
 
     //  Número aleatorios entre 250 y 420:    num=250+rand()%(421-250);
-
     // De forma general es  variable = limite_inferior + rand() % (limite_superior +1 - limite_inferior) ;
 
-     double numero= a +rand()%(b-a);
+    double numero= a +rand()%(b-a);
 
     return numero;
 }
@@ -280,6 +268,12 @@ double fdpIA2(double x)
 	return pow((pow(((x - alfa) / beta),2) + 1) * beta * pi,-1);
 }
 
+
+int tiempoDeAtencion()
+{
+        return (int)randomENTRE(20,28);
+}
+/*      -------------TIEMPO DE ATENCION MODIFICADO TEMPORALMENTE------------------
 int tiempoDeAtencion()
 {
 	while (true)
@@ -294,7 +288,7 @@ int tiempoDeAtencion()
 			return static_cast<int>(x1);
 		}
 	}
-}
+}*/
 
 double fdpTA(double x)
 {
@@ -333,4 +327,3 @@ int obtenerMinimoTC2(int cantidadDeMaquinasModelo2, std::vector<int> &tiempoComp
 	}
 	return minimo;
 }
-
